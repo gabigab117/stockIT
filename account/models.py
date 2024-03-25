@@ -1,6 +1,7 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.conf import settings
 
 
 class CustomUserManager(BaseUserManager):
@@ -38,3 +39,15 @@ class CustomUser(AbstractUser):
     USERNAME_FIELD = "email"
 
     objects = CustomUserManager()
+
+
+class Company(models.Model):
+    name = models.CharField(max_length=200, verbose_name="Nom")
+    admin = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Administrateur")
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL, verbose_name="Utilisateurs")
+    # phone
+    # website
+    # email
+    # siret
+    # logo
+    # address
