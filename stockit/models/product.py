@@ -3,9 +3,11 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils.text import slugify
 
+from account.models import Company
+
 
 class Supplier(models.Model):
-    company = models.ForeignKey(to="Company", on_delete=models.CASCADE, verbose_name="Entreprise/Utilisateur")
+    company = models.ForeignKey(to=Company, on_delete=models.CASCADE, verbose_name="Entreprise/Utilisateur")
     name = models.CharField(max_length=50, verbose_name="Nom")
     phone = models.CharField(max_length=20, verbose_name="Téléphone")
     website = models.URLField(verbose_name="Site internet")
@@ -41,7 +43,7 @@ class Product(models.Model):
     purchase_price = models.FloatField(verbose_name="Prix d'achat")
     VAT = models.CharField(max_length=3, choices=VAT)
     stock = models.FloatField(default=0)
-    company = models.ForeignKey(to="Company", on_delete=models.CASCADE,
+    company = models.ForeignKey(to=Company, on_delete=models.CASCADE,
                                 verbose_name="Entreprise")
     suppliers = models.ManyToManyField(to=Supplier, verbose_name="Fournisseurs")
 
