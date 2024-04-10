@@ -69,6 +69,9 @@ class Company(models.Model):
 
     class Meta:
         verbose_name = "Entreprise"
+        permissions = [
+            ("company_admin_status", "User has all the rights on company"),
+        ]
 
     @property
     def identification_name(self):
