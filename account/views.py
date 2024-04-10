@@ -2,11 +2,13 @@ from smtplib import SMTPException
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 
-from .forms import SignUpForm
+from .forms import SignUpForm, CompanyForm
+from .utils import company_form_validation
 from .verification import send_email_verification, email_verification_token
 
 
@@ -62,3 +64,16 @@ def activate(request, uidb64, token):
         messages.add_message(request, messages.INFO,
                              "Fail !")
         return redirect("index")
+
+
+@login_required
+def add_company_view(request):
+    if request.method == "POST":
+        form = CompanyForm(request.POST)
+        if form.is_valid():
+            company_form_validation(request, form)
+            messages.add_message(request, messages.INFO, message="Entreprise créée !")
+            return redirect("index")
+    else:
+        form = CompanyForm()
+    return render(request, "account/add_company.html", context={"form": form})
