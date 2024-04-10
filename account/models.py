@@ -57,7 +57,7 @@ class UserAddress(models.Model):
 
 
 class Company(models.Model):
-    name = models.CharField(max_length=200, verbose_name="Nom")
+    name = models.CharField(max_length=200, verbose_name="Nom", unique=True, help_text="Raison sociale")
     slug = models.SlugField()
     users = models.ManyToManyField(to=settings.AUTH_USER_MODEL, verbose_name="Utilisateurs",
                                    related_name="companies")
@@ -81,6 +81,9 @@ class Company(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
+
+        last_company = Company.objects.last()
+        self.identification = (last_company.identification + 1) if last_company else 1
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -100,4 +103,4 @@ class CompanyAddress(models.Model):
         return f"{self.company} - {self.city}"
 
     class Meta:
-        verbose_name = "Adresse"
+        verbose_name = "Address"
