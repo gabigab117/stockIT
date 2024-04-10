@@ -10,4 +10,3 @@ def add_company_admin_permission(user):
     for perm in permissions:
         if perm.codename == "company_admin_status":
             user.user_permissions.add(perm)
-    return permissions
