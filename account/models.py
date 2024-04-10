@@ -59,10 +59,8 @@ class UserAddress(models.Model):
 class Company(models.Model):
     name = models.CharField(max_length=200, verbose_name="Nom")
     slug = models.SlugField()
-    admins = models.ManyToManyField(settings.AUTH_USER_MODEL, verbose_name="Administrateur",
-                                    related_name="admin_companies")
     users = models.ManyToManyField(to=settings.AUTH_USER_MODEL, verbose_name="Utilisateurs",
-                                   related_name="user_companies")
+                                   related_name="companies")
     phone = models.CharField(max_length=20, verbose_name="Téléphone")
     website = models.URLField(verbose_name="Site internet")
     email = models.EmailField()
