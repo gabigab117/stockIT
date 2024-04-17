@@ -40,6 +40,6 @@ def test_add_company_view(client: Client, user_1):
             "name": "py", "phone": "0344785145", "email": "t@t.com", "website": "www.g.com"}
     client.post(reverse("account:add-company"), data)
     company = Company.objects.get(name="py")
-    # Then a company with address is created
+    # Then a company with address is created, and user has admin status perm
     assert company.companyaddress.city == "Ons en Bray"
     assert user_1.has_perm("account.company_admin_status")
