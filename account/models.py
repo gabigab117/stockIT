@@ -62,7 +62,7 @@ class Company(models.Model):
     users = models.ManyToManyField(to=settings.AUTH_USER_MODEL, verbose_name="Utilisateurs",
                                    related_name="companies")
     phone = models.CharField(max_length=20, verbose_name="Téléphone")
-    website = models.URLField(verbose_name="Site internet")
+    website = models.URLField(verbose_name="Site internet", blank=True)
     email = models.EmailField()
     kbis = models.FileField(null=True, blank=True)
     identification = models.IntegerField(unique=True)
