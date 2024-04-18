@@ -12,7 +12,7 @@
 
 </head>
 <body class="d-flex flex-column min-vh-100">
-<nav class="navbar bg-body-tertiary shadow-lg mb-5">
+<nav class="navbar bg-body-tertiary shadow-lg mb-5" id="#navbar">
     <div class="container-fluid">
         <a class="navbar-brand" href="{% url 'index' %}">Stock!t</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
@@ -31,11 +31,15 @@
                     </li>
                     {% if request.user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Logout</a>
+                        <form method="post" action="{% url 'account:logout' %}">
+                            {% csrf_token %}
+                            <input type="submit" value="Logout" class="nav-link active" aria-current="page">
+                        </form>
+
                     </li>
                     {% else %}
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Login</a>
+                        <a class="nav-link active" aria-current="page" href="{% url 'account:login' %}">Login</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="{% url 'account:signup' %}">SignUp</a>
@@ -71,9 +75,9 @@
                 document.addEventListener('DOMContentLoaded', function() {
      {% for message in messages %}
          Swal.fire({
-             title: "Good job!",
+             title: "",
              text: "{{ message|safe }}",
-             icon: "success"
+
          });
      {% endfor %}
  });
