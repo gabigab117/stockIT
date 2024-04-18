@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 </head>
 <body class="d-flex flex-column min-vh-100">
-<nav class="navbar bg-body-tertiary fixed-top shadow-lg">
+<nav class="navbar bg-body-tertiary shadow-lg mb-5">
     <div class="container-fluid">
         <a class="navbar-brand" href="{% url 'index' %}">Stock!t</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
@@ -36,17 +36,17 @@
                         <a class="nav-link active" aria-current="page" href="#">Login</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">SignUp</a>
+                        <a class="nav-link active" aria-current="page" href="{% url 'account:signup' %}">SignUp</a>
                     </li>
                     {% endif %}
 
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                            aria-expanded="false">
-                            Dropdown
+                            Mon espace
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="{% url 'account:add-company' %}">Ajouter mon entreprise</a></li>
                             <li><a class="dropdown-item" href="#">Another action</a></li>
                             <li>
                                 <hr class="dropdown-divider">
@@ -63,9 +63,24 @@
         </div>
     </div>
 </nav>
+{% if messages %}
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+     {% for message in messages %}
+         Swal.fire({
+             title: "Good job!",
+             text: "{{ message|safe }}",
+             icon: "success"
+         });
+     {% endfor %}
+ });
+            </script>
+
+            {% endif %}
 {% block body %}{% endblock %}
 
-<div class="container-fluid text-center mt-auto p-5 rounded" style="background-color: white;">
+<div class="container-fluid text-center mt-5 p-5 rounded" style="background-color: white;">
 
     <hr>
 
@@ -87,5 +102,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>

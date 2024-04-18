@@ -21,5 +21,6 @@ from landing.views import index_view
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("ckeditor5/", include('django_ckeditor_5.urls'), name="ck_editor_5_upload_file"),
-    path('', index_view, name="index")
+    path('', index_view, name="index"),
+    path("account/", include("account.urls")),
 ]
