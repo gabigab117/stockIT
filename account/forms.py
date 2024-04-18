@@ -23,3 +23,8 @@ class CompanyForm(forms.ModelForm):
         model = Company
         exclude = ["users", "identification", "slug"]
 
+
+class LoginForm(forms.Form):
+    email = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput, label="Mot de passe")
+
