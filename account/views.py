@@ -1,13 +1,16 @@
 from smtplib import SMTPException
 
 from django.contrib import messages
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LoginView
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
+from django.views.decorators.http import require_POST
 
-from .forms import SignUpForm, CompanyForm
+from .forms import SignUpForm, CompanyForm, SelectCompanyForm
 from .utils import company_form_validation
 from .verification import send_email_verification, email_verification_token
 
@@ -77,3 +80,30 @@ def add_company_view(request):
     else:
         form = CompanyForm()
     return render(request, "account/add_company.html", context={"form": form})
+
+
+class UserLoginView(LoginView):
+    template_name = "account/login.html"
+    next_page = reverse_lazy("index")
+
+
+@require_POST
+def logout_view(request):
+    logout(request)
+    return redirect("index")
+
+
+@login_required
+def select_company_view(request):
+    user = request.user
+    if request.method == "POST":
+        form = SelectCompanyForm(user, request.POST)
+        if form.is_valid():
+            company = form.cleaned_data["company"]
+            request.session["company"] = f"{company.name} id {company.identification}"
+            messages.add_message(request, messages.INFO, f"Choix {company} validé.")
+            return redirect(request.path)
+    else:
+        form = SelectCompanyForm(user)
+    return render(request, "account/select_company.html", context={"form": form})
+

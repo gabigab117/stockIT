@@ -73,6 +73,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'account.context_processors.add_session_company_to_context',
             ],
         },
     },
@@ -240,3 +241,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'gabrieltrouve5@gmail.com'
 EMAIL_HOST_PASSWORD = env('EMAIL_PW')
 DEFAULT_FROM_EMAIL = 'PlatForum<gabrieltrouve5@gmail.com>'
+
+LOGIN_URL = "account:login"
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
