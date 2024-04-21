@@ -58,14 +58,14 @@ class UserAddress(models.Model):
 
 class Company(models.Model):
     name = models.CharField(max_length=200, verbose_name="Nom", unique=True, help_text="Raison sociale")
-    slug = models.SlugField()
+    slug = models.SlugField(blank=True)
     users = models.ManyToManyField(to=settings.AUTH_USER_MODEL, verbose_name="Utilisateurs",
-                                   related_name="companies")
+                                   related_name="companies", blank=True)
     phone = models.CharField(max_length=20, verbose_name="Téléphone")
     website = models.URLField(verbose_name="Site internet", blank=True)
     email = models.EmailField()
     kbis = models.FileField(null=True, blank=True)
-    identification = models.IntegerField(unique=True)
+    identification = models.IntegerField(unique=True, blank=True)
 
     class Meta:
         verbose_name = "Entreprise"
