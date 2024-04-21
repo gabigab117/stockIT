@@ -28,3 +28,9 @@ class LoginForm(forms.Form):
     email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput, label="Mot de passe")
 
+
+class SelectCompanyForm(forms.Form):
+
+    def __init__(self, user, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['company'] = forms.ModelChoiceField(queryset=Company.objects.filter(users=user), label="Entreprise")
