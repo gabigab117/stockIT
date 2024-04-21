@@ -14,7 +14,7 @@
 <body class="d-flex flex-column min-vh-100">
 <nav class="navbar bg-body-tertiary shadow-lg mb-5" id="#navbar">
     <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'index' %}">Stock!t</a>
+        <a class="navbar-brand" href="{% url 'index' %}">Stock!t</a>{% if company_session %}{{ company_session }}{% endif %}
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
                 aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -53,18 +53,19 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'account:add-company' %}">Ajouter mon entreprise</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li><a class="dropdown-item" href="{% url 'account:select-company' %}">Sélectionner une entreprise</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                            {% if company_session %}
+                            <li><a class="dropdown-item" href="#">Visualiser les articles</a></li>
+                            <li><a class="dropdown-item" href="#">Ajout d'un article</a></li>
+                            <li><a class="dropdown-item" href="#">Inventaires</a></li>
+                            <li><a class="dropdown-item" href="#">Résumé</a></li>
+                            {% endif %}
                         </ul>
                     </li>
                 </ul>
-                <form class="d-flex mt-3" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
             </div>
         </div>
     </div>
