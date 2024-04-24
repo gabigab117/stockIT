@@ -17,3 +17,8 @@ def user_1():
 @pytest.fixture
 def company_1():
     return Company.objects.create(name='pygabdev', phone="0144865112", email="gab@gabo.com")
+
+
+@pytest.fixture
+def company_2():
+    return Company.objects.create(name='pyeldev', phone="0144865113", email="ely@ely.com")

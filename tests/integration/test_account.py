@@ -43,3 +43,18 @@ def test_add_company_view(client: Client, user_1):
     # Then a company with address is created, and user has admin status perm
     assert company.companyaddress.city == "Ons en Bray"
     assert user_1.has_perm("account.company_admin_status")
+
+
+@pytest.mark.django_db
+def test_select_company_view(client: Client, user_1, company_1: Company, company_2):
+    # Given user who select a company
+    company_1.users.add(user_1)
+    client.force_login(user_1)
+    r = client.get(reverse("account:select-company"))
+    # in the list of choices there are only the companies of which the user is a part
+    assert "pygabdev" in str(r.content)
+    assert "pyeldev" not in str(r.content)
+    # When user submits the form
+    client.post(reverse("account:select-company"), data={"company": company_1.id})
+    # Then the session has a key "company" with the name and id of company instance
+    assert client.session["company"] == f"{company_1.name} id {company_1.identification}"
