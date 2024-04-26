@@ -1,15 +1,16 @@
 import pytest
+from pytest_django.asserts import assertRedirects
 from django.test import Client
 from django.urls import reverse
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 
-from account.models import CustomUser, Company, CompanyAddress
+from account.models import CustomUser, Company
 from account.verification import email_verification_token
 
 
 @pytest.mark.django_db
-def test_signup_post_with_activation(client: Client, mailoutbox):
+def test_signup_post_with_activation(client: Client, mailoutbox, presentation):
     # Given a user wants to create an account
     data = {"email": "test@test.com", "username": "test", "last_name": "Trouvé", "first_name": "Patrick",
             "password1": "Roger_12345678", "password2": "Roger_12345678"}
@@ -25,10 +26,11 @@ def test_signup_post_with_activation(client: Client, mailoutbox):
     uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
     token = email_verification_token.make_token(user)
     url = reverse("account:activate", kwargs={"uidb64": uidb64, "token": token})
-    client.get(url)
+    r = client.get(url)
     user.refresh_from_db()
     # Then his account is active
     assert user.is_active
+    assertRedirects(r, reverse("index"), 302)
 
 
 @pytest.mark.django_db
@@ -55,6 +57,7 @@ def test_select_company_view(client: Client, user_1, company_1: Company, company
     assert "pygabdev" in str(r.content)
     assert "pyeldev" not in str(r.content)
     # When user submits the form
-    client.post(reverse("account:select-company"), data={"company": company_1.id})
+    r = client.post(reverse("account:select-company"), data={"company": company_1.id})
     # Then the session has a key "company" with the name and id of company instance
     assert client.session["company"] == f"{company_1.name} id {company_1.identification}"
+    assertRedirects(r, reverse("account:select-company"), 302)
