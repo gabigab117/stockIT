@@ -23,4 +23,5 @@ urlpatterns = [
     path("ckeditor5/", include('django_ckeditor_5.urls'), name="ck_editor_5_upload_file"),
     path('', index_view, name="index"),
     path("account/", include("account.urls")),
+    path("stockit/", include("stockit.urls")),
 ]

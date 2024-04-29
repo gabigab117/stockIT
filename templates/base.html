@@ -59,7 +59,7 @@
                             </li>
                             {% if company_session %}
                             <li><a class="dropdown-item" href="#">Visualiser les articles</a></li>
-                            <li><a class="dropdown-item" href="#">Ajout d'un article</a></li>
+                            <li><a class="dropdown-item" href="{% url 'stockit:create-article' %}">Ajout d'un article</a></li>
                             <li><a class="dropdown-item" href="#">Inventaires</a></li>
                             <li><a class="dropdown-item" href="#">Résumé</a></li>
                             {% endif %}
