@@ -1,3 +1,21 @@
+from django.contrib.auth.decorators import login_required
+from .utils import company_required
+from django.utils.decorators import method_decorator
 from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.views.generic import CreateView
 
-# Create your views here.
+from stockit.models import Product
+
+
+@method_decorator(login_required, name="dispatch")
+@method_decorator(company_required, name="dispatch")
+class CreateArticle(CreateView):
+    model = Product
+    fields = ["name", "ean", "package", "selling_price", "purchase_price", "VAT", "suppliers"]
+    success_url = reverse_lazy("index")
+    template_name = "stockit/create-product.html"
+
+    def form_valid(self, form):
+        form.instance.company = self.request.session["company"]
+        return super().form_valid(form)
