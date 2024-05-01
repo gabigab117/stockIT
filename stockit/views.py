@@ -1,4 +1,6 @@
 from django.contrib.auth.decorators import login_required
+
+from .forms import ProductForm
 from .utils import company_required
 from django.utils.decorators import method_decorator
 from django.shortcuts import render
@@ -12,7 +14,7 @@ from stockit.models import Product
 @method_decorator(company_required, name="dispatch")
 class CreateArticle(CreateView):
     model = Product
-    fields = ["name", "ean", "package", "selling_price", "purchase_price", "VAT", "suppliers"]
+    form_class = ProductForm
     success_url = reverse_lazy("index")
     template_name = "stockit/create-product.html"
 
