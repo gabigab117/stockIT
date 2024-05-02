@@ -7,6 +7,10 @@ manage their companies, as well as efficiently manage their stocks, goods entrie
 
 ## Main Features
 
+**To view the full range of functionalities, not all features are accessible directly from the main branch. Some
+functionalities are located within specific branches, allowing for a more organized and manageable development process.
+**
+
 User Account Management: Users can sign up, log in, and manage their user accounts.
 
 Multi-Enterprise Management: Users can register and manage multiple companies from their user account.
@@ -87,7 +91,7 @@ def select_company_view(request):
     return render(request, "account/select_company.html", context={"form": form})
 ```
 
-###  Custom the context processor
+### Custom the context processor
 
 Furthermore, the context processor has been modified to display the name of the selected company, ensuring a more
 personalized user experience.
@@ -118,3 +122,23 @@ TEMPLATES = [
 ]
 ```
 
+### Custom decorator
+
+Moreover, a custom view decorator has been crafted to add specific functionality to views, enhancing the flexibility and
+control over user interactions within the application.
+
+```python
+def company_required(view_func):
+    def wrapper(request, *args, **kwargs):
+        if not request.session.get("company"):
+            return redirect("account:select-company")
+        response = view_func(request, *args, **kwargs)
+        return response
+
+    return wrapper
+```
+
+# Pytest
+
+Furthermore, tests are being implemented progressively alongside the development of each branch, ensuring the robustness
+and reliability of the system's functionalities.
