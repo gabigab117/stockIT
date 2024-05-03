@@ -14,7 +14,7 @@ class Supplier(models.Model):
     email = models.EmailField()
     rib = models.FileField(verbose_name="RIB", blank=True, null=True)
     kbis = models.FileField(verbose_name="KBIS", blank=True, null=True)
-    identification = models.IntegerField(unique=True)
+    identification = models.IntegerField()
 
     class Meta:
         ordering = ["identification"]
