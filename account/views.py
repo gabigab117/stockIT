@@ -100,7 +100,7 @@ def select_company_view(request):
         form = SelectCompanyForm(user, request.POST)
         if form.is_valid():
             company = form.cleaned_data["company"]
-            request.session["company"] = f"{company.name}/{company.identification}/{company.pk}"
+            request.session["company"] = company.pk
             messages.add_message(request, messages.INFO, f"Choix {company} validé.")
             return redirect(request.path)
     else:

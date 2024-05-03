@@ -7,7 +7,6 @@ from django.utils.decorators import method_decorator
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
-from project.utils import get_pk_from_session
 
 from stockit.models import Product, Supplier
 
@@ -34,5 +33,5 @@ class CreateSupplier(CreateView):
     template_name = "stockit/create-supplier.html"
 
     def form_valid(self, form):
-        form.instance.company = Company.objects.get(pk=get_pk_from_session(self.request.session["company"]))
+        form.instance.company = Company.objects.get(pk=self.request.session["company"])
         return super().form_valid(form)
