@@ -14,7 +14,7 @@
 <body class="d-flex flex-column min-vh-100">
 <nav class="navbar bg-body-tertiary shadow-lg mb-5" id="#navbar">
     <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'index' %}">Stock!t</a>{% if company_session %}{{ company_session }}{% endif %}
+        <a class="navbar-brand" href="{% url 'index' %}">Stock!t</a>{% if company_session %}{{ company_session.name }}{% endif %}
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
                 aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -27,7 +27,7 @@
             <div class="offcanvas-body">
                 <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Accueil</a>
+                        <a class="nav-link active" aria-current="page" href="{% url 'index' %}">Accueil</a>
                     </li>
                     {% if request.user.is_authenticated %}
                     <li class="nav-item">
@@ -60,6 +60,7 @@
                             {% if company_session %}
                             <li><a class="dropdown-item" href="#">Visualiser les articles</a></li>
                             <li><a class="dropdown-item" href="{% url 'stockit:create-article' %}">Ajout d'un article</a></li>
+                            <li><a class="dropdown-item" href="{% url 'stockit:create-supplier' %}">Ajout d'un fournisseur</a></li>
                             <li><a class="dropdown-item" href="#">Inventaires</a></li>
                             <li><a class="dropdown-item" href="#">Résumé</a></li>
                             {% endif %}
