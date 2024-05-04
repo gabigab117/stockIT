@@ -20,7 +20,7 @@ class CreateArticle(CreateView):
     template_name = "stockit/create-product.html"
 
     def form_valid(self, form):
-        form.instance.company = self.request.session["company"]
+        form.instance.company = Company.objects.get(pk=self.request.session["company"])
         return super().form_valid(form)
 
 
