@@ -59,5 +59,5 @@ def test_select_company_view(client: Client, user_1, company_1: Company, company
     # When user submits the form
     r = client.post(reverse("account:select-company"), data={"company": company_1.id})
     # Then the session has a key "company" with the name and id of company instance
-    assert client.session["company"] == f"{company_1.name} id {company_1.identification}"
+    assert client.session["company"] == company_1.pk
     assertRedirects(r, reverse("account:select-company"), 302)
