@@ -6,7 +6,7 @@ from .utils import company_required
 from django.utils.decorators import method_decorator
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import CreateView, ListView
 
 from stockit.models import Product, Supplier
 
@@ -16,12 +16,17 @@ from stockit.models import Product, Supplier
 class CreateArticle(CreateView):
     model = Product
     form_class = ProductForm
-    success_url = reverse_lazy("index")
+    success_url = reverse_lazy("stockit:products")
     template_name = "stockit/create-product.html"
 
     def form_valid(self, form):
         form.instance.company = Company.objects.get(pk=self.request.session["company"])
         return super().form_valid(form)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
 
 
 @method_decorator(login_required, name="dispatch")
@@ -35,3 +40,22 @@ class CreateSupplier(CreateView):
     def form_valid(self, form):
         form.instance.company = Company.objects.get(pk=self.request.session["company"])
         return super().form_valid(form)
+
+
+@login_required
+@company_required
+def products_view(request):
+    company = request.session["company"]
+    products = Product.objects.filter(company=company)
+    return render(request, "stockit/products.html", context={"products": products})
+
+
+@login_required
+@company_required
+def search_products_view(request):
+    company = request.session["company"]
+    query = request.GET.get("products", "")
+    products = Product.objects.filter(company=company)
+    if query:
+        products = Product.objects.filter(name__icontains=query)
+    return render(request, "stockit/products_results.html", context={"products": products})
