@@ -72,7 +72,7 @@ def activate(request, uidb64, token):
 @login_required
 def add_company_view(request):
     if request.method == "POST":
-        form = CompanyForm(request.POST)
+        form = CompanyForm(request.POST, request.FILES)
         if form.is_valid():
             company_form_validation(request, form)
             messages.add_message(request, messages.INFO, message="Entreprise créée !")
@@ -100,7 +100,7 @@ def select_company_view(request):
         form = SelectCompanyForm(user, request.POST)
         if form.is_valid():
             company = form.cleaned_data["company"]
-            request.session["company"] = f"{company.name} id {company.identification}"
+            request.session["company"] = company.pk
             messages.add_message(request, messages.INFO, f"Choix {company} validé.")
             return redirect(request.path)
     else:

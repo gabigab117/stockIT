@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 import environ
 
-
 env = environ.Env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -48,6 +47,7 @@ INSTALLED_APPS = [
     'account',
     'stockit',
     'landing',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
@@ -227,7 +227,6 @@ CKEDITOR_5_CONFIGS = {
         }
     }
 }
-
 
 # Crispy
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"

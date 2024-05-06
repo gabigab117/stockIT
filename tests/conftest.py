@@ -1,5 +1,6 @@
 import pytest
 from account.models import CustomUser, Company
+from stockit.models import Supplier
 from landing.models import CompanyPresentation
 
 
@@ -15,8 +16,10 @@ def user_1():
 
 
 @pytest.fixture
-def company_1():
-    return Company.objects.create(name='pygabdev', phone="0144865112", email="gab@gabo.com")
+def company_1(user_1):
+    company = Company.objects.create(name='pygabdev', phone="0144865112", email="gab@gabo.com")
+    company.users.add(user_1)
+    return company
 
 
 @pytest.fixture
