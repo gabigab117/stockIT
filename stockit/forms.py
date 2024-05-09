@@ -7,6 +7,8 @@ from stockit.models import Product, Supplier
 
 
 class ProductForm(forms.ModelForm):
+    ean = forms.CharField()
+
     class Meta:
         model = Product
         exclude = ["slug", "company", "stock"]
@@ -19,8 +21,9 @@ class ProductForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Row(
-                Column('name', css_class='form-group col-md-6 mb-0'),
-                Column('VAT', css_class='form-group col-md-6 mb-0'),
+                Column('name', css_class='form-group col-md-4 mb-0'),
+                Column('VAT', css_class='form-group col-md-4 mb-0'),
+                Column("state", css_class='form-group col-md-4 mb-0'),
                 css_class="form-row"
             ),
             Row(
