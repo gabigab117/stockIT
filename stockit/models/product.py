@@ -37,11 +37,14 @@ class Product(models.Model):
     class Unit(models.TextChoices):
         LITER = "liter", "Litre"
         WEIGHT = "weight", "Poids"
-        PIECE = "Piece", "Pièce"
+        PIECE = "piece", "Pièce"
+
+    class State(models.TextChoices):
+        BLOCKED = "blocked", "Bloqué"
+        PURGE = "purge", "Purgé"
 
     name = models.CharField(max_length=200, verbose_name="Nom")
     slug = models.SlugField(blank=True)
-    ean = models.CharField(max_length=13)
     package = models.IntegerField(verbose_name="Colis")
     selling_price = models.FloatField(verbose_name="Prix de vente")
     purchase_price = models.FloatField(verbose_name="Prix d'achat")
@@ -52,9 +55,16 @@ class Product(models.Model):
     suppliers = models.ManyToManyField(to=Supplier, verbose_name="Fournisseurs")
     quantity = models.FloatField(verbose_name="Volume")
     unit = models.CharField(max_length=10, choices=Unit, verbose_name="Unité")
+    state = models.CharField(max_length=10, choices=State, verbose_name="Etat", blank=True)
+    created = models.DateTimeField(auto_now_add=True, verbose_name="Date de création")
+    updated = models.DateTimeField(auto_now=True, verbose_name="Date de mise à jour")
 
     class Meta:
         verbose_name = "Produit"
+
+    @property
+    def get_main_ean(self):
+        return Barcode.objects.get(product=self, main=True).ean
 
     def __str__(self):
         return f"{self.name} - {self.company}"
@@ -62,6 +72,23 @@ class Product(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+
+class Barcode(models.Model):
+    ean = models.CharField(max_length=13, unique=True)
+    main = models.BooleanField(default=False)
+    product = models.ForeignKey(to=Product, on_delete=models.CASCADE, verbose_name="Produit")
+
+    class Meta:
+        verbose_name = "ean"
+
+    def __str__(self):
+        return f"{self.ean} - {self.product}"
+
+    def save(self, *args, **kwargs):
+        if self.main:
+            Barcode.objects.filter(product=self.product, main=True).exclude(pk=self.pk).update(main=False)
         super().save(*args, **kwargs)
 
 
