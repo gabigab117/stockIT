@@ -4,11 +4,12 @@ from account.models import Company
 from .forms import ProductForm, SupplierForm
 from .utils import company_required
 from django.utils.decorators import method_decorator
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView
+from django.db import transaction
 
-from stockit.models import Product, Supplier
+from stockit.models import Product, Supplier, Barcode
 
 
 @method_decorator(login_required, name="dispatch")
@@ -19,9 +20,12 @@ class CreateArticle(CreateView):
     success_url = reverse_lazy("stockit:products")
     template_name = "stockit/create-product.html"
 
+    @transaction.atomic
     def form_valid(self, form):
         form.instance.company = Company.objects.get(pk=self.request.session["company"])
-        return super().form_valid(form)
+        result = super().form_valid(form)
+        Barcode.objects.create(ean=form.cleaned_data["ean"], main=True, product=form.instance)
+        return result
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -57,3 +61,10 @@ def search_products_view(request):
     products = Product.objects.filter(name__icontains=query, company=company) if query else Product.objects.none()
     return render(request, "stockit/products_results.html",
                   context={"products": products, "products_counter": products.count()})
+
+
+@login_required
+@company_required
+def product_view(request, pk, slug):
+    product = get_object_or_404(Product, pk=pk)
+    return render(request, "stockit/product.html", context={"product": product})
