@@ -15,19 +15,19 @@ def test_create_product_and_supplier_view(client: Client, user_1, company_1: Com
     session.save()
     # When submit create supplier form
     client.post(reverse("stockit:create-supplier"), data={"company": company_1, "name": "ms", "phone": "0344805114",
-                                                              "website": "http://ms.fr/", "email": "m@m.com"})
+                                                          "website": "http://ms.fr/", "email": "m@m.com"})
     # Then a supplier is created
     supplier = Supplier.objects.get(name="ms")
     assert supplier.name == "ms"
 
     # Given an user with a "company" in session
     # When submit create product form
-    data_product = {"name": "Entreprise test", "ean": "3714567891453", "package": 6, "selling_price": 1,
-                    "purchase_price": 0.5, "VAT": "5.5", "suppliers": [supplier.pk]}
+    data_product = {"name": "my product", "ean": "3714567891453", "package": 6, "selling_price": 1,
+                    "purchase_price": 0.5, "VAT": "5.5", "suppliers": [supplier.pk], "quantity": 1, "unit": "liter"}
     client.post(reverse("stockit:create-article"), data=data_product)
     # Then a product is created
-    product = Product.objects.get(name="Entreprise test")
-    assert product.name == "Entreprise test"
+    product = Product.objects.get(name="my product")
+    assert product.name == "my product"
 
 
 @pytest.mark.django_db

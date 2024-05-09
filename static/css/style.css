@@ -7,3 +7,7 @@ body {
 .white {
     background-color: white;
 }
+
+.htmx-indicator {
+        display: inline-block;
+        margin-left: 10px;

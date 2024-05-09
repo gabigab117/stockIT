@@ -1,6 +1,5 @@
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.utils.translation import gettext_lazy as _
 from django.utils.text import slugify
 
 from account.models import Company
@@ -31,9 +30,14 @@ class Supplier(models.Model):
 
 class Product(models.Model):
     class VAT(models.TextChoices):
-        REDUCED = "5.5", _("Réduit 5.5%")
-        INTERMEDIATE = "10", _("Intermédiaire 10%")
-        NORMAL = "20", _("Normal 20%")
+        REDUCED = "5.5", "Réduit 5.5%"
+        INTERMEDIATE = "10", "Intermédiaire 10%"
+        NORMAL = "20", "Normal 20%"
+
+    class Unit(models.TextChoices):
+        LITER = "liter", "Litre"
+        WEIGHT = "weight", "Poids"
+        PIECE = "Piece", "Pièce"
 
     name = models.CharField(max_length=200, verbose_name="Nom")
     slug = models.SlugField(blank=True)
@@ -41,11 +45,13 @@ class Product(models.Model):
     package = models.IntegerField(verbose_name="Colis")
     selling_price = models.FloatField(verbose_name="Prix de vente")
     purchase_price = models.FloatField(verbose_name="Prix d'achat")
-    VAT = models.CharField(max_length=3, choices=VAT)
+    VAT = models.CharField(max_length=3, choices=VAT, verbose_name="TVA")
     stock = models.FloatField(default=0)
     company = models.ForeignKey(to=Company, on_delete=models.CASCADE,
                                 verbose_name="Entreprise")
     suppliers = models.ManyToManyField(to=Supplier, verbose_name="Fournisseurs")
+    quantity = models.FloatField(verbose_name="Volume")
+    unit = models.CharField(max_length=10, choices=Unit, verbose_name="Unité")
 
     class Meta:
         verbose_name = "Produit"

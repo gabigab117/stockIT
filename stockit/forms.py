@@ -2,6 +2,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column, Submit
 from django import forms
 
+from account.models import Company
 from stockit.models import Product, Supplier
 
 
@@ -10,8 +11,11 @@ class ProductForm(forms.ModelForm):
         model = Product
         exclude = ["slug", "company", "stock"]
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, request, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields["suppliers"] = forms.ModelMultipleChoiceField(
+            queryset=Supplier.objects.filter(company=Company.objects.get(pk=request.session["company"])),
+            label="Fournisseurs")
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Row(
@@ -26,6 +30,11 @@ class ProductForm(forms.ModelForm):
                 Column('purchase_price', css_class='form-group col-md-4 mb-0'),
                 Column('selling_price', css_class='form-group col-md-4 mb-0'),
                 Column('package', css_class='form-group col-md-4 mb-0'),
+                css_class="form-row"
+            ),
+            Row(
+                Column('quantity', css_class='form-group col-md-3 mb-0'),
+                Column('unit', css_class='form-group col-md-3 mb-0'),
                 css_class="form-row"
             ),
             'suppliers',

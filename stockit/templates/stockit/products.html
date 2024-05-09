@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Articles{% endblock %}
+{% block body %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center mb-5">
+        <div class="col-4 text-center shadow-lg p-5 white">
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Article" aria-label="Search" name="products"
+                       hx-get="{% url 'stockit:search-products' %}"
+                       hx-trigger="keyup changed, products"
+                       hx-target="#products-results"
+                       hx-indicator=".htmx-indicator">
+
+            </form>
+        </div>
+    </div>
+</div>
+<div id="products-results">
+    {% include 'stockit/products_results.html' %}
+</div>
+{% endblock %}

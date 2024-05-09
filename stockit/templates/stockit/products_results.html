@@ -1,0 +1,30 @@
+<div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col text-center shadow-lg p-5 white">
+                <h1>Visualisation des articles</h1>
+                <h5>{{ products_counter }} articles dans la base de données</h5>
+                {% if products %}
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">Libellé</th>
+                        <th scope="col">EAN</th>
+                        <th scope="col">Stock</th>
+                        <th scope="col">PV</th>
+                    </tr>
+                    </thead>
+                    {% for product in products %}
+                    <tbody>
+                    <tr>
+                        <th scope="row">{{ product.name }}</th>
+                        <td>{{ product.ean }}</td>
+                        <td>{{ product.stock }}</td>
+                        <td>{{ product.selling_price }}</td>
+                    </tr>
+                    </tbody>
+                    {% endfor %}
+                </table>
+                {% endif %}
+            </div>
+        </div>
+    </div>
