@@ -2,8 +2,8 @@
         <div class="row justify-content-center">
             <div class="col text-center shadow-lg p-5 white">
                 <h1>Visualisation des articles</h1>
-
-
+                <h5>{{ products_counter }} articles dans la base de données</h5>
+                {% if products %}
                 <table class="table table-striped">
                     <thead>
                     <tr>
@@ -24,7 +24,7 @@
                     </tbody>
                     {% endfor %}
                 </table>
-
+                {% endif %}
             </div>
         </div>
     </div>

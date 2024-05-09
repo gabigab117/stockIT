@@ -45,17 +45,15 @@ class CreateSupplier(CreateView):
 @login_required
 @company_required
 def products_view(request):
-    company = request.session["company"]
-    products = Product.objects.filter(company=company)
-    return render(request, "stockit/products.html", context={"products": products})
+    products_counter = Product.objects.none().count()
+    return render(request, "stockit/products.html", context={"products_counter": products_counter})
 
 
 @login_required
 @company_required
 def search_products_view(request):
     company = request.session["company"]
-    query = request.GET.get("products", "")
-    products = Product.objects.filter(company=company)
-    if query:
-        products = Product.objects.filter(name__icontains=query)
-    return render(request, "stockit/products_results.html", context={"products": products})
+    query = request.GET.get("products")
+    products = Product.objects.filter(name__icontains=query, company=company) if query else Product.objects.none()
+    return render(request, "stockit/products_results.html",
+                  context={"products": products, "products_counter": products.count()})
