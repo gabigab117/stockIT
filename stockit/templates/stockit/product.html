@@ -23,7 +23,7 @@
                     <li class="list-group-item">Mesure : {{ product.get_unit_display }}</li>
                 </ul>
                 <div class="card-body">
-                    <a href="#" class="card-link">Modifier</a>
+                    <a href="{% url 'stockit:update-product' pk=product.pk slug=product.slug %}" class="card-link">Modifier</a>
                     <a href="#" class="card-link">Ventes</a>
                 </div>
             </div>

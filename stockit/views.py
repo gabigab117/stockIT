@@ -2,9 +2,9 @@ from django.contrib.auth.decorators import login_required
 
 from account.models import Company
 from .forms import ProductForm, SupplierForm
-from .utils import company_required
+from .utils import company_required, user_is_associated_with_company_product
 from django.utils.decorators import method_decorator
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from django.db import transaction
@@ -65,6 +65,23 @@ def search_products_view(request):
 
 @login_required
 @company_required
+@user_is_associated_with_company_product
 def product_view(request, pk, slug):
-    product = get_object_or_404(Product, pk=pk)
+    product: Product = get_object_or_404(Product, pk=pk)
     return render(request, "stockit/product.html", context={"product": product})
+
+
+@login_required
+@company_required
+@user_is_associated_with_company_product
+def product_update_view(request, pk, slug):
+    product: Product = get_object_or_404(Product, pk=pk)
+    if request.method == "POST":
+        form: ProductForm = ProductForm(request.POST, instance=product, request=request)
+        if form.is_valid():
+            form.save()
+            return redirect("stockit:product")
+    else:
+        form: ProductForm = ProductForm(instance=product, request=request)
+    return render(request, "stockit/update-product.html", context={"form": form})
+    # I have to fix a bug with request in this update form
