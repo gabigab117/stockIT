@@ -1,5 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.urls import reverse
 from django.utils.text import slugify
 
 from account.models import Company
@@ -73,6 +74,9 @@ class Product(models.Model):
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse("stockit:product", kwargs={"pk": self.pk, "slug": self.slug})
 
 
 class Barcode(models.Model):
