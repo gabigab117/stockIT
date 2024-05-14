@@ -6,6 +6,36 @@ from account.models import Company
 from stockit.models import Product, Supplier
 
 
+def product_form_layout(include_ean: bool):
+    layout = [
+        Row(
+            Column('name', css_class='form-group col-md-4 mb-0'),
+            Column('VAT', css_class='form-group col-md-4 mb-0'),
+            Column("state", css_class='form-group col-md-4 mb-0'),
+            css_class="form-row"
+        ),
+
+        Row(
+            Column('purchase_price', css_class='form-group col-md-4 mb-0'),
+            Column('selling_price', css_class='form-group col-md-4 mb-0'),
+            Column('package', css_class='form-group col-md-4 mb-0'),
+            css_class="form-row"
+        ),
+        Row(
+            Column('quantity', css_class='form-group col-md-3 mb-0'),
+            Column('unit', css_class='form-group col-md-3 mb-0'),
+            css_class="form-row"
+        ),
+        'suppliers',
+        Submit("submit", "Valider")
+    ]
+    if include_ean:
+        layout.insert(1, Row(
+            Column("ean", css_class="form-group col-md-3"), css_class="form-row justify-content-center"
+        ))
+    return Layout(*layout)
+
+
 class ProductForm(forms.ModelForm):
     ean = forms.CharField()
 
@@ -19,30 +49,14 @@ class ProductForm(forms.ModelForm):
             queryset=Supplier.objects.filter(company=Company.objects.get(pk=request.session["company"])),
             label="Fournisseurs")
         self.helper = FormHelper()
-        self.helper.layout = Layout(
-            Row(
-                Column('name', css_class='form-group col-md-4 mb-0'),
-                Column('VAT', css_class='form-group col-md-4 mb-0'),
-                Column("state", css_class='form-group col-md-4 mb-0'),
-                css_class="form-row"
-            ),
-            Row(
-                Column("ean", css_class="form-group col-md-3"), css_class="form-row justify-content-center"
-            ),
-            Row(
-                Column('purchase_price', css_class='form-group col-md-4 mb-0'),
-                Column('selling_price', css_class='form-group col-md-4 mb-0'),
-                Column('package', css_class='form-group col-md-4 mb-0'),
-                css_class="form-row"
-            ),
-            Row(
-                Column('quantity', css_class='form-group col-md-3 mb-0'),
-                Column('unit', css_class='form-group col-md-3 mb-0'),
-                css_class="form-row"
-            ),
-            'suppliers',
-            Submit("submit", "Valider")
-        )
+        self.helper.layout = product_form_layout(include_ean=True)
+
+
+class ProductUpdateForm(ProductForm):
+    def __init__(self, request, *args, **kwargs):
+        super().__init__(request, *args, **kwargs)
+        self.fields.pop("ean")
+        self.helper.layout = product_form_layout(include_ean=False)
 
 
 class SupplierForm(forms.ModelForm):
