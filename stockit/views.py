@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 
 from account.models import Company
-from .forms import ProductForm, SupplierForm
+from .forms import ProductForm, SupplierForm, ProductUpdateForm
 from .utils import company_required, user_is_associated_with_company_product
 from django.utils.decorators import method_decorator
 from django.shortcuts import render, get_object_or_404, redirect
@@ -77,11 +77,10 @@ def product_view(request, pk, slug):
 def product_update_view(request, pk, slug):
     product: Product = get_object_or_404(Product, pk=pk)
     if request.method == "POST":
-        form: ProductForm = ProductForm(request.POST, instance=product, request=request)
+        form: ProductUpdateForm = ProductUpdateForm(data=request.POST, instance=product, request=request)
         if form.is_valid():
             form.save()
-            return redirect("stockit:product")
+            return redirect(product)
     else:
-        form: ProductForm = ProductForm(instance=product, request=request)
+        form: ProductUpdateForm = ProductUpdateForm(instance=product, request=request)
     return render(request, "stockit/update-product.html", context={"form": form})
-    # I have to fix a bug with request in this update form
