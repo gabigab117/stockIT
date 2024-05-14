@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}{{ product.name }}{% endblock %}
+{% block body %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-12 col-lg-7 col-xl-6 text-center shadow-lg p-5 white">
+            <h1>{{ product.name }}</h1>
+
+            <div class="card">
+
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.get_main_ean }}</h5>
+
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Colis : {{ product.package }}</li>
+                    <li class="list-group-item">Prix d'achat : {{ product.purchase_price }}</li>
+                    <li class="list-group-item">Prix de vente : {{ product.selling_price }}</li>
+                    <li class="list-group-item">TVA : {{ product.VAT }}</li>
+                    <li class="list-group-item">Stock : {{ product.stock }}</li>
+                    <li class="list-group-item">Composition : {{ product.quantity }}</li>
+                    <li class="list-group-item">Mesure : {{ product.get_unit_display }}</li>
+                </ul>
+                <div class="card-body">
+                    <a href="{% url 'stockit:update-product' pk=product.pk slug=product.slug %}" class="card-link">Modifier</a>
+                    <a href="#" class="card-link">Ventes</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
