@@ -82,3 +82,18 @@ class SupplierForm(forms.ModelForm):
             ),
             Submit("submit", "Valider")
         )
+
+
+class ReceiptForm(forms.Form):
+    date = forms.DateField(widget=forms.DateInput)
+
+    def __init__(self, company: Company, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["supplier"] = forms.ModelChoiceField(queryset=Supplier.objects.filter(company=company))
+        for i in range(30):
+            self.fields[f"product_{i}"] = forms.CharField(label=f"Produit {i}")
+            self.fields[f"quantity_{i}"] = forms.FloatField(label=f"Quantité {i}")
+            self.fields[f"purchase_price_{i}"] = forms.FloatField(label=f"Prix d'achat {i}")
+    # Penser  mettre en forme avec des layouts crispy
+    # Une méthode clean pour le supplier de Receipt et supplier des products
+
