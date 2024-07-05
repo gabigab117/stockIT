@@ -12,7 +12,8 @@ from django.views.decorators.http import require_POST
 
 from .forms import SignUpForm, CompanyForm, SelectCompanyForm
 from .utils import company_form_validation
-from .verification import send_email_verification, email_verification_token
+from .verification import email_verification_token
+from .tasks import send_email_verification
 
 
 def signup_view(request):
@@ -23,7 +24,7 @@ def signup_view(request):
             user.is_active = False
             user.save()
             try:
-                send_email_verification(request, user)
+                send_email_verification.delay(user_pk=user.pk)
                 messages.add_message(request, messages.INFO,
                                      message="Bienvenu(e) sur Stock!t. Merci de confirmer votre email")
                 return redirect("index")

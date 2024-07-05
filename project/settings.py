@@ -239,8 +239,13 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'gabrieltrouve5@gmail.com'
 EMAIL_HOST_PASSWORD = env('EMAIL_PW')
-DEFAULT_FROM_EMAIL = 'PlatForum<gabrieltrouve5@gmail.com>'
+DEFAULT_FROM_EMAIL = 'Stockit<gabrieltrouve5@gmail.com>'
 
 LOGIN_URL = "account:login"
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+
+# Celery
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
