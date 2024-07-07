@@ -1,20 +1,23 @@
-from django.contrib.sites.shortcuts import get_current_site
+from celery import shared_task
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
+from django.contrib.auth import get_user_model
 
-from account.models import CustomUser
-from .token_generator import email_verification_token
+from account.verification.token_generator import email_verification_token
 
 
-def send_email_verification(request, user: CustomUser):
-    current_site = get_current_site(request)
+User = get_user_model()
+
+
+@shared_task
+def send_email_verification(user_pk):
+    user = User.objects.get(pk=user_pk)
     subject = 'Account activation'
     body = render_to_string(
         'email/verification.html',
         {
-            'domain': current_site.domain,
             'uid': urlsafe_base64_encode(force_bytes(user.pk)),
             'token': email_verification_token.make_token(user),
         }
