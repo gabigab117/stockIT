@@ -11,6 +11,12 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      EMAIL_PW: ${{ secrets.EMAIL_PW }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      DEBUG: ${{ secrets.DEBUG }}
+      ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
+
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python 3.12
