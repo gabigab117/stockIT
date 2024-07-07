@@ -1,6 +1,6 @@
 import pytest
 from pytest_django.asserts import assertRedirects
-from django.test import Client
+from django.test import Client, override_settings
 from django.urls import reverse
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
@@ -10,6 +10,7 @@ from account.verification import email_verification_token
 
 
 @pytest.mark.django_db
+@override_settings(CELERY_TASK_ALWAYS_EAGER=True)
 def test_signup_post_with_activation(client: Client, mailoutbox, presentation):
     # Given a user wants to create an account
     data = {"email": "test@test.com", "username": "test", "last_name": "Trouvé", "first_name": "Patrick",
