@@ -78,6 +78,18 @@ class Product(models.Model):
     def get_absolute_url(self):
         return reverse("stockit:product", kwargs={"pk": self.pk, "slug": self.slug})
 
+    def update_price(self, product_receipt):
+        self.purchase_price = product_receipt.purchase_price
+        self.save()
+        return self.purchase_price
+
+    def update_quantity(self, product_receipt, movement: str):
+        if movement == "+":
+            self.stock += product_receipt.quantity
+        elif movement == "-":
+            self.stock -= product_receipt.quantity
+        self.save()
+
 
 class Barcode(models.Model):
     ean = models.CharField(max_length=13, unique=True)
