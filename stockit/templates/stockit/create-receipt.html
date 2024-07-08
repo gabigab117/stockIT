@@ -8,8 +8,10 @@
             <h1>Création d'une entrée</h1>
             <form method="post">
                 {% csrf_token %}
-                {% crispy form %}
+                {{ form|crispy }}
+                <input type="submit" value="Valider" class="btn btn-primary">
             </form>
+
         </div>
     </div>
 </div>
