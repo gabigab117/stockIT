@@ -122,7 +122,7 @@ class Promotion(models.Model):
         if self.pk:
             existing_promotion = existing_promotion.exclude(pk=self.pk)
         if existing_promotion.exists():
-            raise ValidationError(_("Chevauchement interdit"))
+            raise ValidationError("Chevauchement interdit")
 
     class Meta:
         ordering = ["product__name", "end"]
