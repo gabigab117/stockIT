@@ -35,8 +35,7 @@ def product_1(company_1):
     return product
 
 
-# Create a Supplier
 @pytest.fixture
 def supplier_1(company_1):
     return Supplier.objects.create(name="supplier_1", company=company_1, phone="0144865114", email="t@t.com",
-                                      website="http://t.com")
+                                   website="http://t.com")

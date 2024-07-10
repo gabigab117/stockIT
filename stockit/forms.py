@@ -1,6 +1,8 @@
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column, Submit
 from django import forms
+from django.conf import settings
+from django.core.exceptions import ValidationError
 
 from account.models import Company
 from stockit.models import Product, Supplier
@@ -82,3 +84,37 @@ class SupplierForm(forms.ModelForm):
             ),
             Submit("submit", "Valider")
         )
+
+
+class ReceiptForm(forms.Form):
+    date = forms.DateField(widget=forms.SelectDateWidget)
+
+    def __init__(self, company: Company, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["supplier"] = forms.ModelChoiceField(queryset=Supplier.objects.filter(company=company),
+                                                         label="Fournisseur")
+        self.fields["product_1"] = forms.ModelChoiceField(
+            queryset=Product.objects.filter(company=company), label="Produit 1")
+
+        self.fields["quantity_1"] = forms.FloatField(label="Quantité 1")
+        self.fields["purchase_price_1"] = forms.FloatField(label="Prix d'achat 1")
+
+        self.add_product_fields(company)
+
+    def add_product_fields(self, company):
+        for i in range(2, settings.PRODUCTS_RECEIPT):
+            self.fields[f"product_{i}"] = forms.ModelChoiceField(
+                queryset=Product.objects.filter(company=company), required=False)
+
+            self.fields[f"quantity_{i}"] = forms.FloatField(label=f"Quantité {i}", required=False)
+            self.fields[f"purchase_price_{i}"] = forms.FloatField(label=f"Prix d'achat {i}", required=False)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        supplier: Supplier = cleaned_data.get("supplier")
+
+        for i in range(1, settings.PRODUCTS_RECEIPT):
+            product: Product = cleaned_data.get(f"product_{i}")
+            if product:
+                if supplier not in product.suppliers.all():
+                    self.add_error(f"product_{i}", "Le produit n'est pas référencé chez le fournisseur")

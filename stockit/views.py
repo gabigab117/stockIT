@@ -1,7 +1,8 @@
 from django.contrib.auth.decorators import login_required
 
 from account.models import Company
-from .forms import ProductForm, SupplierForm, ProductUpdateForm
+from .forms import ProductForm, SupplierForm, ProductUpdateForm, ReceiptForm
+from .funcs import receipt_form_validation
 from .utils import company_required, user_is_associated_with_company_product
 from django.utils.decorators import method_decorator
 from django.shortcuts import render, get_object_or_404, redirect
@@ -84,3 +85,18 @@ def product_update_view(request, pk, slug):
     else:
         form: ProductUpdateForm = ProductUpdateForm(instance=product, request=request)
     return render(request, "stockit/update-product.html", context={"form": form})
+
+
+@login_required
+@company_required
+def create_receipt_view(request):
+    company = Company.objects.get(pk=request.session["company"])
+
+    if request.method == "POST":
+        form = ReceiptForm(company, request.POST)
+        if form.is_valid():
+            receipt_form_validation(form, company, "+")
+            return redirect("index")
+    else:
+        form = ReceiptForm(company)
+    return render(request, "stockit/create-receipt.html", context={"form": form})

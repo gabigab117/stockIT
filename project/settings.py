@@ -245,7 +245,9 @@ LOGIN_URL = "account:login"
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
-
 # Celery
 CELERY_BROKER_URL = "redis://localhost:6379"
 CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+
+# StockIt settings
+PRODUCTS_RECEIPT = 31
