@@ -251,3 +251,6 @@ CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 
 # StockIt settings
 PRODUCTS_RECEIPT = 31
+
+# Special Chars
+SPECIAL_CHARS = " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
