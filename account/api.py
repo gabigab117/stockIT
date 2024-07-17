@@ -5,7 +5,8 @@ from django.utils.http import urlsafe_base64_decode
 from ninja import Router
 from ninja.security import django_auth, django_auth_superuser
 
-from .schemas import RegisterSchema, LoginSchema
+from .models import Company
+from .schemas import RegisterSchema, LoginSchema, CompanySchema
 from .tasks import send_email_verification
 from .verification import email_verification_token
 
@@ -60,3 +61,9 @@ def logout_api(request):
 @account_api.get("/is_logged_in", url_name="is_logged_in", auth=django_auth)
 def is_logged_in(request):
     return {"is_logged_in": request.user.is_authenticated}
+
+
+@account_api.post("/create-company")
+def create_company(request, payload: CompanySchema):
+    company = Company.objects.create(**payload.dict())
+    return {"company": company.name}

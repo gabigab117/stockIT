@@ -1,6 +1,8 @@
 import re
-from ninja import Schema
-from pydantic import field_validator, EmailStr, Field
+from ninja import Schema, ModelSchema
+from pydantic import field_validator, EmailStr, Field, HttpUrl
+
+from account.models import Company, CompanyAddress
 
 
 class RegisterSchema(Schema):
@@ -29,3 +31,12 @@ class RegisterSchema(Schema):
 class LoginSchema(Schema):
     email: EmailStr
     password: str
+
+
+class CompanySchema(ModelSchema):
+    website: HttpUrl | None = None
+    email: EmailStr
+
+    class Meta:
+        model = Company
+        fields = ["name", "phone", "website", "email", "kbis"]
