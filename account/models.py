@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -44,7 +45,7 @@ class CustomUser(AbstractUser):
 
 
 class UserAddress(models.Model):
-    user = models.OneToOneField(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Utilisateur")
+    user = models.OneToOneField(to=get_user_model(), on_delete=models.CASCADE, verbose_name="Utilisateur")
     address_1 = models.CharField(max_length=1024, help_text="Voirie, numéro de rue", verbose_name="Adresse 1")
     address_2 = models.CharField(max_length=1024, help_text="Bât, étage, lieu-dit", verbose_name="Adresse 2",
                                  blank=True)

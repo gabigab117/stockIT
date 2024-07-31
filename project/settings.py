@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'stockit',
     'landing',
     'django_cleanup.apps.CleanupConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
